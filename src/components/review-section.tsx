@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useAuth } from "@/components/auth-provider";
 import { ReviewCard } from "@/components/review-card";
+import { describeFirebaseError } from "@/lib/firebase/errors";
 import { StarRatingInput } from "@/components/star-rating-input";
 import type { MemberReview } from "@/lib/firebase/reviews";
 import type { ItemKey } from "@/lib/firebase/wishlist";
@@ -93,6 +94,7 @@ function ReviewForm({ itemKey, user }: { itemKey: ItemKey; user: { uid: string; 
   const [rating, setRating] = useState(0);
   const [content, setContent] = useState("");
   const [status, setStatus] = useState<"idle" | "submitting" | "done" | "error">("idle");
+  const [submitError, setSubmitError] = useState("");
   const [error, setError] = useState("");
 
   const onSubmit = async (event: FormEvent) => {
@@ -110,8 +112,9 @@ function ReviewForm({ itemKey, user }: { itemKey: ItemKey; user: { uid: string; 
       setStatus("done");
       setRating(0);
       setContent("");
-    } catch (submitError) {
-      console.error(submitError);
+    } catch (caught) {
+      console.error(caught);
+      setSubmitError(describeFirebaseError(caught, "후기를 저장하지 못했어요. 잠시 후 다시 시도해 주세요."));
       setStatus("error");
     }
   };
@@ -152,7 +155,7 @@ function ReviewForm({ itemKey, user }: { itemKey: ItemKey; user: { uid: string; 
       )}
       {status === "error" && (
         <p role="alert" className="text-sm font-medium text-terracotta-700">
-          후기를 저장하지 못했어요. 잠시 후 다시 시도해 주세요.
+          {submitError}
         </p>
       )}
       <button

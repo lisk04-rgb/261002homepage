@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { describeFirebaseError } from "@/lib/firebase/errors";
 import { POST_CONTENT_MAX, POST_TITLE_MAX, postInputSchema, type PostInput } from "@/lib/board";
 
 type PostFormProps = {
@@ -29,7 +30,7 @@ export function PostForm({ initial, submitLabel, onSubmit, onCancel }: PostFormP
       await onSubmit(parsed.data);
     } catch (submitError) {
       console.error(submitError);
-      setError("저장하지 못했어요. 잠시 후 다시 시도해 주세요.");
+      setError(describeFirebaseError(submitError, "저장하지 못했어요. 잠시 후 다시 시도해 주세요."));
       setSubmitting(false);
     }
   };

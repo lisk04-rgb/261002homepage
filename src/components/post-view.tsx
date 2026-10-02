@@ -7,6 +7,7 @@ import { useAuth } from "@/components/auth-provider";
 import { LoginPrompt } from "@/components/login-prompt";
 import { PostForm } from "@/components/post-form";
 import { COMMENT_MAX, commentInputSchema } from "@/lib/board";
+import { describeFirebaseError } from "@/lib/firebase/errors";
 import { formatDate } from "@/lib/format";
 import type { BoardComment, Post } from "@/lib/firebase/board";
 
@@ -198,7 +199,7 @@ function CommentForm({ onSubmit }: { onSubmit: (content: string) => Promise<void
       setContent("");
     } catch (submitError) {
       console.error(submitError);
-      setError("댓글을 저장하지 못했어요. 잠시 후 다시 시도해 주세요.");
+      setError(describeFirebaseError(submitError, "댓글을 저장하지 못했어요. 잠시 후 다시 시도해 주세요."));
     } finally {
       setSubmitting(false);
     }
