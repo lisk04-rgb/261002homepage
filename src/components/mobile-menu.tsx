@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { AuthButton } from "@/components/auth-button";
 import { NAV_LINKS } from "@/lib/site";
 
 export function MobileMenu() {
@@ -47,6 +48,9 @@ export function MobileMenu() {
                 </Link>
               </li>
             ))}
+            <li>
+              <AuthButton variant="mobile" />
+            </li>
             <li className="py-3">
               <Link
                 href="/contact"

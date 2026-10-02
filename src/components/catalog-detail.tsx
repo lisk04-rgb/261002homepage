@@ -5,15 +5,20 @@ import { CtaBanner } from "@/components/cta-banner";
 import { ImageGallery } from "@/components/image-gallery";
 import { ItemCard } from "@/components/item-card";
 import { MdxContent } from "@/components/mdx-content";
+import { ReviewSection } from "@/components/review-section";
+import { WishlistButton } from "@/components/wishlist-button";
 import { getRelatedItems, toSummary } from "@/lib/catalog";
 import { PRICE_ON_INQUIRY, formatPrice } from "@/lib/format";
 import { KIND_LABELS } from "@/lib/site";
-import type { CatalogItem } from "@/types/content";
+import type { CatalogItem, Review } from "@/types/content";
 
-export function CatalogDetail({ item, allItems }: { item: CatalogItem; allItems: CatalogItem[] }) {
+type CatalogDetailProps = { item: CatalogItem; allItems: CatalogItem[]; reviews: Review[] };
+
+export function CatalogDetail({ item, allItems, reviews }: CatalogDetailProps) {
   const kindLabel = KIND_LABELS[item.kind];
   const related = getRelatedItems(allItems, item).map(toSummary);
-  const inquiryHref = `/contact?item=${encodeURIComponent(`${item.kind}/${item.slug}`)}`;
+  const itemKey = `${item.kind}/${item.slug}` as const;
+  const inquiryHref = `/contact?item=${encodeURIComponent(itemKey)}`;
 
   return (
     <>
@@ -69,6 +74,7 @@ export function CatalogDetail({ item, allItems }: { item: CatalogItem; allItems:
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <ButtonLink href={inquiryHref}>이 {kindLabel} 문의하기</ButtonLink>
+            <WishlistButton itemKey={itemKey} title={item.title} />
             <ButtonLink href={`/${item.kind}`} variant="secondary">
               {kindLabel} 목록 보기
             </ButtonLink>
@@ -85,6 +91,10 @@ export function CatalogDetail({ item, allItems }: { item: CatalogItem; allItems:
             <MdxContent source={item.description} />
           </div>
         </section>
+      </Container>
+
+      <Container className="mt-16">
+        <ReviewSection itemKey={itemKey} staticReviews={reviews.filter((review) => review.target === itemKey)} />
       </Container>
 
       {related.length > 0 && (

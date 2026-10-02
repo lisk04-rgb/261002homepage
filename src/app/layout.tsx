@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
+import { Analytics } from "@/components/analytics";
+import { AuthProvider } from "@/components/auth-provider";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { getSiteConfig } from "@/lib/content";
@@ -27,11 +29,14 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         >
           본문 바로가기
         </a>
-        <SiteHeader siteName={site.name} />
-        <main id="main" className="flex-1">
-          {children}
-        </main>
-        <SiteFooter site={site} />
+        <AuthProvider>
+          <SiteHeader siteName={site.name} />
+          <main id="main" className="flex-1">
+            {children}
+          </main>
+          <SiteFooter site={site} />
+        </AuthProvider>
+        <Analytics />
       </body>
     </html>
   );

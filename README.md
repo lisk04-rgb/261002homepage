@@ -9,7 +9,7 @@
 - 분위기: 따뜻하고 신뢰감 있는 미니멀 / 색상: 네이비 `#1F2A44` + 베이지 `#F3EDE3` + 테라코타 `#B8572F`
 - 이미지: 직접 만든 SVG 플레이스홀더 (저작권 문제 없음). 실제 사진으로 교체 필요
 - 사업자 정보·연락처는 `[상호명]` 같은 자리표시자로 둠
-- 추가 라이브러리: `gray-matter`, `next-mdx-remote`(MDX 처리), `zod`(콘텐츠 검증, Phase 2 폼 검증에도 사용)
+- 추가 라이브러리: `gray-matter`, `next-mdx-remote`(MDX 처리), `zod`(콘텐츠·후기 검증, Phase 2 폼 검증에도 사용), `firebase`(요청에 따라 추가)
 - `/contact`는 Phase 1에서 연락처만 보여주는 임시 페이지 (Phase 2에서 문의 폼으로 교체)
 
 ## 처음 실행하기
@@ -47,7 +47,28 @@ Netlify로 옮길 때: Netlify에서 저장소를 Import하면 Next.js를 자동
 |---|---|---|
 | `NEXT_PUBLIC_SITE_URL` | 배포 시 | 사이트 실제 주소. 예: `https://example.com` (끝에 `/` 없이) |
 
-Phase 2에서 문의 메일(Resend)·카카오톡 채널 관련 변수가 추가됩니다.
+| `NEXT_PUBLIC_FIREBASE_API_KEY` 외 5개 | 선택 | Firebase 콘솔 → 프로젝트 설정 → 내 앱 → 웹 앱의 "구성" 값. `.env.example`의 이름 그대로 입력. **비어 있으면 로그인·찜·회원 후기가 숨겨지고** 나머지는 정상 동작 |
+| `NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID` | 선택 | `G-`로 시작하는 값. 있으면 방문 통계(Analytics)가 켜짐 |
+
+Vercel에도 같은 이름으로 모두 넣고 Redeploy 해야 배포본에서 동작합니다. Phase 2에서 문의 메일(Resend)·카카오톡 채널 관련 변수가 추가됩니다.
+
+## Firebase 기능 (Spark 무료 요금제)
+- **구글 로그인**: 헤더의 "로그인" / "마이페이지"
+- **찜하기**: 상품·서비스 상세에서 ♡ 버튼 → 마이페이지 "찜 목록" (Firestore `users/{uid}/wishlist`)
+- **회원 후기**: 로그인한 회원이 상세 페이지에서 작성 → **승인 대기** → 관리자가 승인하면 공개 (Firestore `reviews`). 파일 후기(`content/reviews`)와 함께 표시
+- **방문 통계**: Google Analytics (Firebase 콘솔 → Analytics에서 확인)
+
+### 처음 한 번 해야 할 설정
+1. Firebase 콘솔 → **Firestore Database → 데이터베이스 만들기** (없다면). 위치는 `asia-northeast3`(서울) 권장
+2. **규칙(Rules)** 탭에 저장소의 `firestore.rules` 내용을 그대로 붙여 넣고 **게시**
+3. **인증 → 설정 → 승인된 도메인**에 배포 주소(`xxx.vercel.app`, 실제 도메인) 추가 (이미 하셨다면 생략)
+4. 환경변수를 로컬 `.env.local`과 Vercel에 입력
+
+### 후기 승인하는 법
+Firebase 콘솔 → Firestore Database → `reviews` 컬렉션 → 문서를 열어 `status` 값을 `pending` → `approved`로 바꾸면 사이트에 공개됩니다. 공개하지 않을 후기는 `rejected`로 바꾸세요. (작성자 본인만 볼 수 있음)
+
+### Spark 무료 한도 (참고)
+Firestore 하루 읽기 5만·쓰기 2만 건, 저장 1GiB. 소규모 사이트에는 충분하며, 후기는 상세 페이지를 스크롤할 때만 읽어 사용량을 줄였습니다. Spark는 한도를 넘으면 결제 없이 **기능이 일시 중단**될 뿐 요금이 청구되지 않습니다.
 
 ## 개발자용 명령어
 `npm run lint` · `npm run typecheck` · `npm test` · `npm run build`

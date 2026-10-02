@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AuthButton } from "@/components/auth-button";
 import { Container } from "@/components/container";
 import { MobileMenu } from "@/components/mobile-menu";
 import { NAV_LINKS } from "@/lib/site";
@@ -19,6 +20,9 @@ export function SiteHeader({ siteName }: { siteName: string }) {
                 </Link>
               </li>
             ))}
+            <li>
+              <AuthButton />
+            </li>
             <li>
               <Link
                 href="/contact"

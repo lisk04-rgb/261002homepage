@@ -1,0 +1,46 @@
+rules_version = '2';
+
+// Firebase 콘솔 → Firestore Database → 규칙(Rules) 탭에 이 내용을 그대로 붙여 넣고 [게시]하세요.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // 찜 목록: 본인만 읽고 쓸 수 있다.
+    match /users/{uid}/wishlist/{itemId} {
+      allow read, delete: if request.auth != null && request.auth.uid == uid;
+      allow create, update: if request.auth != null && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['key', 'createdAt'])
+        && request.resource.data.key is string
+        && request.resource.data.key.matches('^(products|services)/[a-z0-9-]+$')
+        && request.resource.data.createdAt == request.time;
+    }
+
+    // 회원 후기: 승인된 후기는 누구나 보고, 작성자는 자기 후기(승인 대기 포함)를 볼 수 있다.
+    // 승인(status를 approved로 변경)은 관리자가 Firebase 콘솔에서 직접 한다.
+    match /reviews/{reviewId} {
+      allow read: if resource.data.status == 'approved'
+        || (request.auth != null && resource.data.uid == request.auth.uid);
+
+      allow create: if request.auth != null
+        && request.resource.data.keys().hasOnly(['uid', 'name', 'rating', 'content', 'target', 'status', 'createdAt'])
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.status == 'pending'
+        && request.resource.data.name is string && request.resource.data.name.size() <= 20
+        && request.resource.data.rating is int
+        && request.resource.data.rating >= 1 && request.resource.data.rating <= 5
+        && request.resource.data.content is string
+        && request.resource.data.content.size() >= 10 && request.resource.data.content.size() <= 1000
+        && request.resource.data.target is string
+        && request.resource.data.target.matches('^(products|services)/[a-z0-9-]+$')
+        && request.resource.data.createdAt == request.time;
+
+      // 수정은 막고(승인 후 내용 바꿔치기 방지), 삭제는 본인만.
+      allow update: if false;
+      allow delete: if request.auth != null && resource.data.uid == request.auth.uid;
+    }
+
+    // 그 외 모든 경로는 차단
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
