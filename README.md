@@ -56,6 +56,7 @@ Phase 2에서 문의 메일(Resend)·카카오톡 채널 관련 변수가 추가
 - **구글 로그인**: 헤더의 "로그인" / "마이페이지"
 - **찜하기**: 상품·서비스 상세에서 ♡ 버튼 → 마이페이지 "찜 목록" (Firestore `users/{uid}/wishlist`)
 - **회원 후기**: 로그인한 회원이 상세 페이지에서 작성 → **승인 대기** → 관리자가 승인하면 공개 (Firestore `reviews`). 파일 후기(`content/reviews`)와 함께 표시
+- **게시판(`/board`)**: 로그인한 회원이 글·댓글 작성, 본인 글·댓글 수정/삭제(글쓴이는 자기 글의 댓글도 삭제 가능). 읽기는 누구나. 부적절한 글은 Firebase 콘솔 → Firestore → `posts` 문서를 삭제해 관리
 - **방문 통계**: Google Analytics (Firebase 콘솔 → Analytics에서 확인)
 
 ### 처음 한 번 해야 할 설정
