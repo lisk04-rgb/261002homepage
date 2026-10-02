@@ -47,10 +47,10 @@ Netlify로 옮길 때: Netlify에서 저장소를 Import하면 Next.js를 자동
 |---|---|---|
 | `NEXT_PUBLIC_SITE_URL` | 배포 시 | 사이트 실제 주소. 예: `https://example.com` (끝에 `/` 없이) |
 
-| `NEXT_PUBLIC_FIREBASE_API_KEY` 외 5개 | 선택 | Firebase 콘솔 → 프로젝트 설정 → 내 앱 → 웹 앱의 "구성" 값. `.env.example`의 이름 그대로 입력. **비어 있으면 로그인·찜·회원 후기가 숨겨지고** 나머지는 정상 동작 |
+| `NEXT_PUBLIC_FIREBASE_API_KEY` 외 5개 | 선택 | Firebase 콘솔 → 프로젝트 설정 → 내 앱 → 웹 앱의 "구성" 값. `.env.example`의 이름 그대로 입력. **비워 두면 코드(`src/lib/firebase/config.ts`)에 들어 있는 기본값이 쓰임**. 다른 Firebase 프로젝트로 바꿀 때만 입력 |
 | `NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID` | 선택 | `G-`로 시작하는 값. 있으면 방문 통계(Analytics)가 켜짐 |
 
-Vercel에도 같은 이름으로 모두 넣고 Redeploy 해야 배포본에서 동작합니다. Phase 2에서 문의 메일(Resend)·카카오톡 채널 관련 변수가 추가됩니다.
+Phase 2에서 문의 메일(Resend)·카카오톡 채널 관련 변수가 추가됩니다.
 
 ## Firebase 기능 (Spark 무료 요금제)
 - **구글 로그인**: 헤더의 "로그인" / "마이페이지"
@@ -62,7 +62,7 @@ Vercel에도 같은 이름으로 모두 넣고 Redeploy 해야 배포본에서 �
 1. Firebase 콘솔 → **Firestore Database → 데이터베이스 만들기** (없다면). 위치는 `asia-northeast3`(서울) 권장
 2. **규칙(Rules)** 탭에 저장소의 `firestore.rules` 내용을 그대로 붙여 넣고 **게시**
 3. **인증 → 설정 → 승인된 도메인**에 배포 주소(`xxx.vercel.app`, 실제 도메인) 추가 (이미 하셨다면 생략)
-4. 환경변수를 로컬 `.env.local`과 Vercel에 입력
+4. (선택) 다른 Firebase 프로젝트를 쓸 때만 환경변수 입력. 기본값은 이미 코드에 들어 있어 배포 서비스에 따로 넣지 않아도 됩니다
 
 ### 후기 승인하는 법
 Firebase 콘솔 → Firestore Database → `reviews` 컬렉션 → 문서를 열어 `status` 값을 `pending` → `approved`로 바꾸면 사이트에 공개됩니다. 공개하지 않을 후기는 `rejected`로 바꾸세요. (작성자 본인만 볼 수 있음)
