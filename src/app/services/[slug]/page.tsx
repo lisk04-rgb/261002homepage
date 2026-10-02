@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CatalogDetail } from "@/components/catalog-detail";
-import { getServices, getReviews } from "@/lib/content";
+import { getServices, getReviews, getSiteConfig } from "@/lib/content";
 import { catalogItemMetadata } from "@/lib/metadata";
 
 type PageProps = { params: Promise<{ slug: string }> };
@@ -23,5 +23,5 @@ export default async function ServiceDetailPage({ params }: PageProps) {
   const items = getServices();
   const item = items.find((candidate) => candidate.slug === slug);
   if (!item) notFound();
-  return <CatalogDetail item={item} allItems={items} reviews={getReviews()} />;
+  return <CatalogDetail item={item} allItems={items} reviews={getReviews()} disclaimer={getSiteConfig().disclaimer} />;
 }

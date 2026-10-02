@@ -32,6 +32,24 @@ export const reviewSchema = z.object({
   featured: z.boolean().default(false),
 });
 
+export const EVENT_TYPES = ["launch", "start", "recruit", "deadline", "event"] as const;
+
+const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, { error: "날짜는 2026-01-31 형식으로 적어 주세요." });
+
+export const eventSchema = z
+  .object({
+    title: z.string().min(1, { error: "title(일정 이름)을 적어 주세요." }),
+    date: isoDate,
+    endDate: isoDate.optional(),
+    type: z.enum(EVENT_TYPES, { error: "type은 launch, start, recruit, deadline, event 중 하나여야 해요." }),
+    description: z.string().optional(),
+    link: z.string().startsWith("/", { error: "link는 /services/... 처럼 /로 시작해야 해요." }).optional(),
+  })
+  .refine((event) => !event.endDate || event.endDate >= event.date, {
+    error: "endDate는 date보다 같거나 늦어야 해요.",
+    path: ["endDate"],
+  });
+
 export const siteConfigSchema = z.object({
   name: z.string().min(1),
   tagline: z.string().min(1),
@@ -52,4 +70,5 @@ export const siteConfigSchema = z.object({
     registrationNumber: z.string(),
     address: z.string(),
   }),
+  disclaimer: z.string(),
 });

@@ -6,7 +6,7 @@ import { PageHeader } from "@/components/page-header";
 import { toSummary } from "@/lib/catalog";
 import { getServices } from "@/lib/content";
 
-const description = "직접 만들어 보는 클래스와 맞춤 제작 서비스를 소개합니다.";
+const description = "내집마련 1대1 컨설팅과 4주 코칭을 소개합니다.";
 
 export const metadata: Metadata = {
   title: "서비스",

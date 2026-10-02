@@ -55,7 +55,7 @@ export function MyPage({ items }: { items: CatalogSummary[] }) {
     return (
       <Container className="mt-10">
         <div className="max-w-md rounded-2xl bg-white p-8 ring-1 ring-beige-200">
-          <p className="text-navy-700">로그인하면 찜한 상품과 내가 쓴 후기를 볼 수 있어요.</p>
+          <p className="text-navy-700">로그인하면 찜한 서비스와 내가 쓴 후기를 볼 수 있어요.</p>
           <button
             type="button"
             onClick={signIn}
@@ -115,8 +115,8 @@ export function MyPage({ items }: { items: CatalogSummary[] }) {
         ) : (
           <div className="mt-4 rounded-xl bg-beige-100 p-8 text-center">
             <p className="text-navy-700">아직 찜한 항목이 없어요. 상세 페이지에서 ♡ 찜하기를 눌러 보세요.</p>
-            <ButtonLink href="/products" className="mt-4">
-              상품 둘러보기
+            <ButtonLink href="/services" className="mt-4">
+              서비스 둘러보기
             </ButtonLink>
           </div>
         )}

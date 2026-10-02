@@ -3,7 +3,7 @@ import { Container } from "@/components/container";
 
 export function CtaBanner({
   title = "궁금한 점이 있으신가요?",
-  description = "상품, 클래스, 맞춤 제작 무엇이든 편하게 물어보세요. 영업일 기준 하루 안에 답변드려요.",
+  description = "내 상황에 어떤 서비스가 맞는지 편하게 물어보세요. 영업일 기준 하루 안에 답변드려요.",
 }: {
   title?: string;
   description?: string;
@@ -20,8 +20,8 @@ export function CtaBanner({
             <ButtonLink href="/contact" variant="primary">
               문의하기
             </ButtonLink>
-            <ButtonLink href="/products" variant="light">
-              상품 둘러보기
+            <ButtonLink href="/services" variant="light">
+              서비스 둘러보기
             </ButtonLink>
           </div>
         </div>

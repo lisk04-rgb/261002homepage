@@ -4,11 +4,12 @@ import { Analytics } from "@/components/analytics";
 import { AuthProvider } from "@/components/auth-provider";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
-import { getSiteConfig } from "@/lib/content";
-import { siteUrl } from "@/lib/site";
+import { getProducts, getSiteConfig } from "@/lib/content";
+import { getNavLinks, siteUrl } from "@/lib/site";
 import "./globals.css";
 
 const site = getSiteConfig();
+const navLinks = getNavLinks(getProducts().length > 0);
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -30,11 +31,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           본문 바로가기
         </a>
         <AuthProvider>
-          <SiteHeader siteName={site.name} />
+          <SiteHeader siteName={site.name} navLinks={navLinks} />
           <main id="main" className="flex-1">
             {children}
           </main>
-          <SiteFooter site={site} />
+          <SiteFooter site={site} navLinks={navLinks} />
         </AuthProvider>
         <Analytics />
       </body>

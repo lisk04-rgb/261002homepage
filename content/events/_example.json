@@ -1,0 +1,8 @@
+{
+  "title": "예시 일정 (이 파일은 사이트에 나오지 않아요)",
+  "date": "2026-12-01",
+  "endDate": "2026-12-28",
+  "type": "start",
+  "description": "endDate는 기간이 있을 때만 적으세요. type: launch(런칭) / start(시작) / recruit(모집) / deadline(마감) / event(행사)",
+  "link": "/services/home-buying-4week-coaching"
+}

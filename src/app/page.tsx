@@ -6,13 +6,14 @@ import { CtaBanner } from "@/components/cta-banner";
 import { ItemCard } from "@/components/item-card";
 import { ReviewCard } from "@/components/review-card";
 import { SectionHeading } from "@/components/section-heading";
+import { UpcomingEvents } from "@/components/upcoming-events";
 import { toSummary } from "@/lib/catalog";
-import { getProducts, getReviews, getServices, getSiteConfig } from "@/lib/content";
+import { getEvents, getProducts, getReviews, getServices, getSiteConfig } from "@/lib/content";
 
 const STEPS = [
-  { title: "둘러보기", description: "상품과 클래스를 살펴보고 마음에 드는 것을 골라 주세요." },
-  { title: "문의하기", description: "문의 폼이나 카카오톡으로 수량, 일정, 궁금한 점을 남겨 주세요." },
-  { title: "받아보기", description: "상담 후 제작·예약을 확정하고 정성껏 준비해 전해 드려요." },
+  { title: "상담 신청", description: "문의 폼이나 카카오톡으로 내 상황과 궁금한 점을 남겨 주세요." },
+  { title: "현황 점검과 목표 설정", description: "소득·자금·목표 시점을 함께 정리하고 나에게 맞는 서비스를 안내해 드려요." },
+  { title: "실행과 피드백", description: "코칭 기간에는 매주 과제를 제출하고 피드백을 받으며 계획을 완성해요." },
 ];
 
 export default function HomePage() {
@@ -21,6 +22,7 @@ export default function HomePage() {
   const services = getServices();
   const featured = [...products, ...services].filter((item) => item.featured).map(toSummary);
   const titles = new Map([...products, ...services].map((item) => [`${item.kind}/${item.slug}`, item.title]));
+  const events = getEvents();
   const reviews = getReviews()
     .filter((review) => review.featured)
     .slice(0, 3);
@@ -36,7 +38,7 @@ export default function HomePage() {
             </h1>
             <p className="mt-5 max-w-lg text-lg text-navy-700">{site.hero.subtitle}</p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <ButtonLink href="/products">상품 둘러보기</ButtonLink>
+              <ButtonLink href="/services">서비스 둘러보기</ButtonLink>
               <ButtonLink href="/contact" variant="secondary">
                 문의하기
               </ButtonLink>
@@ -58,17 +60,19 @@ export default function HomePage() {
       <section aria-labelledby="featured-title" className="mt-20">
         <Container>
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <SectionHeading id="featured-title" eyebrow="추천" title="가장 사랑받는 상품과 서비스" />
+            <SectionHeading id="featured-title" eyebrow="서비스" title="내 상황에 맞는 방법을 골라 보세요" />
             <div className="flex gap-4 text-sm font-semibold">
-              <Link href="/products" className="text-terracotta-700 hover:underline">
-                상품 전체 보기 →
-              </Link>
+              {products.length > 0 && (
+                <Link href="/products" className="text-terracotta-700 hover:underline">
+                  상품 전체 보기 →
+                </Link>
+              )}
               <Link href="/services" className="text-terracotta-700 hover:underline">
                 서비스 전체 보기 →
               </Link>
             </div>
           </div>
-          <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {featured.map((item) => (
               <li key={`${item.kind}-${item.slug}`}>
                 <ItemCard item={item} />
@@ -77,6 +81,8 @@ export default function HomePage() {
           </ul>
         </Container>
       </section>
+
+      <UpcomingEvents events={events} />
 
       <section aria-labelledby="steps-title" className="mt-24">
         <Container>

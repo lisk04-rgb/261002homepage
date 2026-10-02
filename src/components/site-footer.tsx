@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { Container } from "@/components/container";
-import { NAV_LINKS } from "@/lib/site";
+import type { NavLink } from "@/lib/site";
 import type { SiteConfig } from "@/types/content";
 
-export function SiteFooter({ site }: { site: SiteConfig }) {
+export function SiteFooter({ site, navLinks }: { site: SiteConfig; navLinks: NavLink[] }) {
   return (
     <footer className="mt-24 bg-navy-900 text-beige-100">
       <Container className="grid gap-10 py-12 md:grid-cols-3">
@@ -13,7 +13,7 @@ export function SiteFooter({ site }: { site: SiteConfig }) {
         </div>
         <nav aria-label="하단 메뉴">
           <ul className="grid grid-cols-2 gap-2 text-sm">
-            {NAV_LINKS.map((link) => (
+            {navLinks.map((link) => (
               <li key={link.href}>
                 <Link href={link.href} className="hover:text-white hover:underline">
                   {link.label}
@@ -40,6 +40,7 @@ export function SiteFooter({ site }: { site: SiteConfig }) {
             {site.business.registrationNumber}
           </p>
           <p>주소 {site.business.address}</p>
+          <p className="pb-2 text-beige-100">{site.disclaimer}</p>
           <p>© {new Date().getFullYear()} {site.name}. All rights reserved.</p>
         </Container>
       </div>

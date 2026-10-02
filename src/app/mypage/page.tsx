@@ -13,7 +13,7 @@ export default function MyPageRoute() {
   const items = [...getProducts(), ...getServices()].map(toSummary);
   return (
     <>
-      <PageHeader title="마이페이지" description="찜한 상품과 내가 남긴 후기를 확인할 수 있어요." />
+      <PageHeader title="마이페이지" description="찜한 서비스와 내가 남긴 후기를 확인할 수 있어요." />
       <MyPage items={items} />
     </>
   );

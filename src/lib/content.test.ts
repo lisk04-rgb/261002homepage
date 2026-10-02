@@ -2,7 +2,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { loadCatalog, loadReviews, loadSiteConfig } from "@/lib/content";
+import { loadCatalog, loadEvents, loadReviews, loadSiteConfig } from "@/lib/content";
 
 const tempDirs: string[] = [];
 
@@ -87,11 +87,24 @@ describe("loadReviews", () => {
   });
 });
 
+describe("loadEvents", () => {
+  it("날짜순 정렬, 잘못된 type과 거꾸로 된 기간은 오류", () => {
+    const event = (date: string, extra = "") => JSON.stringify({ title: "일정", date, type: "start", ...JSON.parse(extra || "{}") });
+    const dir = makeContentDir({ "events/b.json": event("2026-12-01"), "events/a.json": event("2026-10-01") });
+    expect(loadEvents(dir).map((item) => item.id)).toEqual(["a", "b"]);
+    const bad = makeContentDir({ "events/x.json": JSON.stringify({ title: "x", date: "2026-10-05", endDate: "2026-10-01", type: "start" }) });
+    expect(() => loadEvents(bad)).toThrow(/endDate/);
+    const badType = makeContentDir({ "events/y.json": JSON.stringify({ title: "y", date: "2026-10-05", type: "zzz" }) });
+    expect(() => loadEvents(badType)).toThrow(/type/);
+  });
+});
+
 describe("실제 content 폴더", () => {
   it("샘플 콘텐츠가 모두 스키마를 통과한다", () => {
-    expect(loadCatalog("products").length).toBeGreaterThanOrEqual(3);
     expect(loadCatalog("services").length).toBeGreaterThanOrEqual(2);
-    expect(loadReviews().length).toBeGreaterThan(0);
+    expect(loadCatalog("products")).toBeInstanceOf(Array);
+    expect(loadReviews()).toBeInstanceOf(Array);
+    expect(loadEvents().length).toBeGreaterThan(0);
     expect(loadSiteConfig().name).toBeTruthy();
   });
 });

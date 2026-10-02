@@ -1,6 +1,7 @@
 import type { z } from "zod";
 import type {
   catalogFrontmatterSchema,
+  eventSchema,
   reviewSchema,
   siteConfigSchema,
 } from "@/lib/schemas";
@@ -24,6 +25,9 @@ export type Service = CatalogItem & { kind: "services" };
 export type CatalogSummary = Omit<CatalogItem, "description">;
 
 export type Review = z.infer<typeof reviewSchema> & { id: string };
+
+export type CalendarEvent = z.infer<typeof eventSchema> & { id: string };
+export type EventType = CalendarEvent["type"];
 
 export type SiteConfig = z.infer<typeof siteConfigSchema>;
 

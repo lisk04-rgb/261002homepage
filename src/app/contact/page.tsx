@@ -5,7 +5,7 @@ import { getSiteConfig } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "문의하기",
-  description: "상품, 클래스, 맞춤 제작에 대해 편하게 문의해 주세요.",
+  description: "내집마련 컨설팅과 코칭에 대해 편하게 문의해 주세요.",
   alternates: { canonical: "/contact" },
 };
 

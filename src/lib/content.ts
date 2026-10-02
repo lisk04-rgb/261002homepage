@@ -2,9 +2,10 @@ import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
 import { z } from "zod";
-import { catalogFrontmatterSchema, reviewSchema, siteConfigSchema } from "@/lib/schemas";
+import { catalogFrontmatterSchema, eventSchema, reviewSchema, siteConfigSchema } from "@/lib/schemas";
 import type {
   CatalogItem,
+  CalendarEvent,
   CatalogKind,
   Product,
   Review,
@@ -70,6 +71,26 @@ export function loadReviews(contentDir = DEFAULT_CONTENT_DIR): Review[] {
     .sort((a, b) => b.date.localeCompare(a.date));
 }
 
+export function loadEvents(contentDir = DEFAULT_CONTENT_DIR): CalendarEvent[] {
+  const dir = path.join(contentDir, "events");
+  return listFiles(dir, ".json")
+    .map((file) => {
+      const filePath = path.join("events", file);
+      let raw: unknown;
+      try {
+        raw = JSON.parse(fs.readFileSync(path.join(dir, file), "utf8"));
+      } catch {
+        throw new Error(`[콘텐츠 오류] ${filePath}: JSON 형식이 올바르지 않아요. 쉼표와 따옴표를 확인해 주세요.`);
+      }
+      const parsed = eventSchema.safeParse(raw);
+      if (!parsed.success) {
+        throw new Error(`[콘텐츠 오류] ${filePath}\n${formatIssues(parsed.error)}`);
+      }
+      return { ...parsed.data, id: file.replace(/\.json$/, "") };
+    })
+    .sort((a, b) => a.date.localeCompare(b.date) || a.title.localeCompare(b.title, "ko"));
+}
+
 export function loadSiteConfig(contentDir = DEFAULT_CONTENT_DIR): SiteConfig {
   const raw: unknown = JSON.parse(fs.readFileSync(path.join(contentDir, "site.json"), "utf8"));
   const parsed = siteConfigSchema.safeParse(raw);
@@ -82,4 +103,5 @@ export function loadSiteConfig(contentDir = DEFAULT_CONTENT_DIR): SiteConfig {
 export const getProducts = () => loadCatalog("products") as Product[];
 export const getServices = () => loadCatalog("services") as Service[];
 export const getReviews = () => loadReviews();
+export const getEvents = () => loadEvents();
 export const getSiteConfig = () => loadSiteConfig();

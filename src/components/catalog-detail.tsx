@@ -12,9 +12,9 @@ import { PRICE_ON_INQUIRY, formatPrice } from "@/lib/format";
 import { KIND_LABELS } from "@/lib/site";
 import type { CatalogItem, Review } from "@/types/content";
 
-type CatalogDetailProps = { item: CatalogItem; allItems: CatalogItem[]; reviews: Review[] };
+type CatalogDetailProps = { item: CatalogItem; allItems: CatalogItem[]; reviews: Review[]; disclaimer: string };
 
-export function CatalogDetail({ item, allItems, reviews }: CatalogDetailProps) {
+export function CatalogDetail({ item, allItems, reviews, disclaimer }: CatalogDetailProps) {
   const kindLabel = KIND_LABELS[item.kind];
   const related = getRelatedItems(allItems, item).map(toSummary);
   const itemKey = `${item.kind}/${item.slug}` as const;
@@ -91,6 +91,10 @@ export function CatalogDetail({ item, allItems, reviews }: CatalogDetailProps) {
             <MdxContent source={item.description} />
           </div>
         </section>
+      </Container>
+
+      <Container className="mt-8">
+        <p className="max-w-3xl rounded-xl bg-beige-100 p-4 text-sm text-navy-700">{disclaimer}</p>
       </Container>
 
       <Container className="mt-16">

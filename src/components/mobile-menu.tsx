@@ -4,9 +4,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AuthButton } from "@/components/auth-button";
-import { NAV_LINKS } from "@/lib/site";
+import type { NavLink } from "@/lib/site";
 
-export function MobileMenu() {
+export function MobileMenu({ navLinks }: { navLinks: NavLink[] }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
@@ -41,7 +41,7 @@ export function MobileMenu() {
           className="absolute inset-x-0 top-16 border-b border-beige-200 bg-beige-50 shadow-sm"
         >
           <ul className="flex flex-col px-4 py-2">
-            {NAV_LINKS.map((link) => (
+            {navLinks.map((link) => (
               <li key={link.href}>
                 <Link href={link.href} className="block py-3 text-lg font-medium text-navy-900">
                   {link.label}

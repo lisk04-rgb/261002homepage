@@ -2,9 +2,9 @@ import Link from "next/link";
 import { AuthButton } from "@/components/auth-button";
 import { Container } from "@/components/container";
 import { MobileMenu } from "@/components/mobile-menu";
-import { NAV_LINKS } from "@/lib/site";
+import type { NavLink } from "@/lib/site";
 
-export function SiteHeader({ siteName }: { siteName: string }) {
+export function SiteHeader({ siteName, navLinks }: { siteName: string; navLinks: NavLink[] }) {
   return (
     <header className="sticky top-0 z-40 border-b border-beige-200 bg-beige-50/95 backdrop-blur">
       <Container className="flex h-16 items-center justify-between">
@@ -12,8 +12,8 @@ export function SiteHeader({ siteName }: { siteName: string }) {
           {siteName}
         </Link>
         <nav aria-label="주요 메뉴" className="hidden md:block">
-          <ul className="flex items-center gap-8">
-            {NAV_LINKS.map((link) => (
+          <ul className="flex items-center gap-6 lg:gap-8">
+            {navLinks.map((link) => (
               <li key={link.href}>
                 <Link href={link.href} className="font-medium text-navy-700 hover:text-navy-900">
                   {link.label}
@@ -33,7 +33,7 @@ export function SiteHeader({ siteName }: { siteName: string }) {
             </li>
           </ul>
         </nav>
-        <MobileMenu />
+        <MobileMenu navLinks={navLinks} />
       </Container>
     </header>
   );
